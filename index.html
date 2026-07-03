@@ -18,13 +18,10 @@
   body{
     font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
     background:var(--bg); color:var(--ink);
-    -webkit-font-smoothing:antialiased;
-    display:flex; justify-content:center;
+    -webkit-font-smoothing:antialiased; display:flex; justify-content:center;
   }
   .app{width:100%; max-width:820px; min-height:100vh; display:flex; flex-direction:column}
-  header{
-    padding:18px 22px 12px; display:flex; align-items:center; gap:10px;
-  }
+  header{padding:18px 22px 12px; display:flex; align-items:center; gap:10px}
   header .logo{font-weight:700; letter-spacing:.02em; font-size:18px}
   header .logo small{display:block; font-weight:400; color:var(--sub); font-size:11px; letter-spacing:.14em}
   .screen{flex:1; padding:6px 20px 30px; display:none; animation:fade .35s ease}
@@ -35,56 +32,56 @@
   h2{font-size:20px; margin:2px 0 14px}
   p.lead{color:var(--sub); line-height:1.7; margin:0 0 18px; font-size:14px}
 
-  /* --- capture --- */
-  .stage{
-    position:relative; width:100%; aspect-ratio:3/4; max-height:60vh; margin:0 auto 16px;
-    background:#1c1917; border-radius:var(--radius); overflow:hidden; display:flex; align-items:center; justify-content:center;
-  }
+  .stage{position:relative; width:100%; aspect-ratio:3/4; max-height:60vh; margin:0 auto 16px;
+    background:#1c1917; border-radius:var(--radius); overflow:hidden; display:flex; align-items:center; justify-content:center}
   .stage video,.stage img,.stage canvas{width:100%; height:100%; object-fit:cover; display:block}
-  .guide{
-    position:absolute; inset:0; pointer-events:none;
-  }
-  .guide .oval{
-    position:absolute; left:50%; top:47%; transform:translate(-50%,-50%);
-    width:56%; height:66%; border:2px dashed rgba(255,255,255,.85);
-    border-radius:50%;
-  }
-  .guide .hint{
-    position:absolute; bottom:14px; left:0; right:0; text-align:center;
-    color:#fff; font-size:13px; text-shadow:0 1px 4px rgba(0,0,0,.6);
-  }
+  .guide{position:absolute; inset:0; pointer-events:none}
+  .guide .oval{position:absolute; left:50%; top:47%; transform:translate(-50%,-50%);
+    width:56%; height:66%; border:2px dashed rgba(255,255,255,.85); border-radius:50%}
+  .guide .hint{position:absolute; bottom:14px; left:0; right:0; text-align:center; color:#fff; font-size:13px; text-shadow:0 1px 4px rgba(0,0,0,.6)}
   .stage .placeholder{color:#8c817a; font-size:14px; text-align:center; padding:20px; line-height:1.7}
 
-  .lightwarn{
-    display:flex; gap:10px; align-items:flex-start; background:#fff7ea; border:1px solid #f2dfba;
-    color:#8a6a2c; border-radius:14px; padding:12px 14px; font-size:12.5px; line-height:1.6; margin:0 0 16px;
-  }
+  .lightwarn{display:flex; gap:10px; align-items:flex-start; background:#fff7ea; border:1px solid #f2dfba;
+    color:#8a6a2c; border-radius:14px; padding:12px 14px; font-size:12.5px; line-height:1.6; margin:0 0 16px}
   .lightwarn b{color:var(--warn)}
 
   .btnrow{display:flex; gap:12px}
   button{font-family:inherit; cursor:pointer; border:none; border-radius:14px; font-size:16px; font-weight:600; padding:15px 18px; transition:transform .06s, background .2s}
   button:active{transform:scale(.97)}
   .btn-primary{background:var(--accent); color:#fff; flex:1}
+  .btn-primary:disabled{background:#d8cfc7; color:#fff}
   .btn-primary:active{background:var(--accent-d)}
   .btn-ghost{background:#f1ebe5; color:var(--ink); flex:1}
   .btn-sm{padding:11px 14px; font-size:14px}
   .hidden{display:none!important}
-
-  /* hidden native camera input */
   #fileInput{display:none}
 
-  /* --- loading --- */
   .loading{display:flex; flex-direction:column; align-items:center; gap:16px; padding:40px 0}
   .spinner{width:44px;height:44px;border:4px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
   .loading p{color:var(--sub); font-size:14px}
 
-  /* --- result --- */
+  /* --- 確定・入力 --- */
+  .confirm-head{display:flex; gap:14px; align-items:center; margin-bottom:20px}
+  .confirm-head img{width:76px;height:96px;border-radius:12px;object-fit:cover;background:#eee;flex-shrink:0}
+  .confirm-head .season{font-size:17px; font-weight:700}
+  .confirm-head .season small{display:block; color:var(--sub); font-weight:400; font-size:11.5px; margin-top:3px}
+  .field{margin:20px 0}
+  .field .flabel{font-size:14px; font-weight:600; margin-bottom:4px}
+  .field .fnote{font-size:11.5px; color:var(--sub); margin-bottom:10px; line-height:1.5}
+  .chips{display:flex; flex-wrap:wrap; gap:9px}
+  .chip-btn{background:#f4efe9; color:#6b5f56; border:1.5px solid transparent; border-radius:12px; padding:11px 15px; font-size:14px; font-weight:600; flex:0 0 auto}
+  .chip-btn.sel{background:#fff; border-color:var(--accent); color:var(--accent-d); box-shadow:0 2px 8px rgba(176,137,104,.18)}
+  .chip-btn .sub{display:block; font-size:10.5px; font-weight:400; color:var(--sub); margin-top:2px}
+  .chip-btn.sel .sub{color:var(--accent-d)}
+  .ai-badge{display:inline-block; background:var(--accent); color:#fff; font-size:10px; font-weight:600; padding:2px 7px; border-radius:6px; margin-left:6px; vertical-align:middle}
+
+  /* --- 結果 --- */
   .result-head{display:flex; gap:16px; align-items:center; margin-bottom:18px}
   .result-head .thumb{width:88px;height:110px;border-radius:14px;object-fit:cover;flex-shrink:0;background:#eee}
-  .result-head .season-name{font-size:22px; font-weight:700}
-  .result-head .face-name{color:var(--accent-d); font-weight:600; margin-top:4px}
-  .result-head .conf{color:var(--sub); font-size:12px; margin-top:6px}
+  .result-head .season-name{font-size:21px; font-weight:700}
+  .result-head .face-name{color:var(--accent-d); font-weight:600; margin-top:4px; font-size:14px}
+  .result-head .hair-name{color:var(--sub); font-size:12.5px; margin-top:4px}
 
   .section{margin:22px 0}
   .section h3{font-size:15px; margin:0 0 12px; display:flex; align-items:center; gap:8px}
@@ -99,16 +96,19 @@
   .taglist{display:flex; flex-wrap:wrap; gap:8px}
   .tag{background:#f4efe9; color:#6b5f56; border-radius:999px; padding:7px 14px; font-size:13px}
 
-  .style-cards{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-  .style-card{background:#faf6f2; border:1px solid var(--line); border-radius:14px; padding:14px}
-  .style-card h4{margin:0 0 6px; font-size:14px}
-  .style-card p{margin:0; font-size:12.5px; color:#6b5f56; line-height:1.6}
+  .style-name{font-size:19px; font-weight:700; color:var(--accent-d); margin:0 0 4px}
+  .style-feat{font-size:13px; color:#5b524c; margin:0 0 14px; line-height:1.6}
+  .spec{display:grid; grid-template-columns:96px 1fr; gap:2px 12px; font-size:13.5px}
+  .spec dt{color:var(--sub); padding:9px 0; border-top:1px solid var(--line)}
+  .spec dd{margin:0; padding:9px 0; border-top:1px solid var(--line); line-height:1.6; color:#3f3733}
 
   .disclaimer{color:var(--sub); font-size:11.5px; line-height:1.6; margin-top:24px; padding-top:16px; border-top:1px solid var(--line)}
+  .srcbadge{font-size:11px; color:var(--sub); margin-top:14px; text-align:right}
+  .srcbadge b{color:var(--accent-d)}
 
   .settings-toggle{margin-left:auto; background:none; color:var(--sub); font-size:12px; font-weight:500; padding:6px}
   .settings{margin-top:14px; font-size:12.5px; color:var(--sub); line-height:1.7}
-  .settings input{width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px; font-size:13px; margin-top:6px; font-family:inherit}
+  .settings input{width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px; font-size:12.5px; margin-top:6px; font-family:inherit}
   .settings label{font-weight:600; color:var(--ink)}
 </style>
 </head>
@@ -119,52 +119,67 @@
     <button class="settings-toggle" id="settingsToggle">設定</button>
   </header>
 
-  <!-- ============ 1. スタート / 撮影画面 ============ -->
+  <!-- 1. 撮影 -->
   <section class="screen active" id="screen-capture">
     <div class="card">
       <h2>お客様のお写真を撮影します</h2>
       <p class="lead">正面を向いて、枠に顔を合わせてください。前髪は上げ、おでこ・両頬が見えるようにするとより正確に診断できます。</p>
-
-      <div class="lightwarn">
-        <span>💡</span>
-        <div><b>照明について</b>：診断精度は光の色に左右されます。できるだけ<b>自然光に近い白色照明の同じ場所</b>で、影が出ないように撮影してください。</div>
-      </div>
-
+      <div class="lightwarn"><span>💡</span>
+        <div><b>照明について</b>：診断精度は光の色に左右されます。できるだけ<b>自然光に近い白色照明の同じ場所</b>で、影が出ないように撮影してください。</div></div>
       <div class="stage" id="stage">
         <video id="video" autoplay playsinline muted class="hidden"></video>
         <img id="preview" class="hidden" alt="">
         <div class="placeholder" id="stagePlaceholder">カメラを起動しています…</div>
         <div class="guide" id="guide"><div class="oval"></div><div class="hint">枠に顔を合わせてください</div></div>
       </div>
-
-      <div class="btnrow" id="liveControls">
-        <button class="btn-primary" id="shootBtn">撮影する</button>
-      </div>
-      <div class="btnrow hidden" id="fallbackControls">
-        <button class="btn-primary" id="nativeCamBtn">カメラで撮影する</button>
-      </div>
+      <div class="btnrow" id="liveControls"><button class="btn-primary" id="shootBtn">撮影する</button></div>
+      <div class="btnrow hidden" id="fallbackControls"><button class="btn-primary" id="nativeCamBtn">カメラで撮影する</button></div>
 
       <div class="settings hidden" id="settingsPanel">
-        <label>AI診断エンジン（任意）</label>
-        <p>空欄のままでも「簡易診断モード」で動作します。より高精度にするにはAnthropic APIキーを入力してください（この端末内にのみ保存されます）。</p>
-        <input type="password" id="apiKey" placeholder="sk-ant-... （任意）">
+        <label>知見スプレッドシートのURL（ウェブに公開したCSV）</label>
+        <p>Googleスプレッドシートを「ファイル → 共有 → ウェブに公開 → CSV」で公開し、そのURLをここに貼ると、シートの内容が提案に反映されます。空欄の場合はアプリ内蔵の初期データで動作します。</p>
+        <input type="url" id="sheetUrl" placeholder="https://docs.google.com/spreadsheets/d/e/..../pub?output=csv">
+        <p id="sheetStatus" style="margin-top:8px"></p>
       </div>
-
       <input type="file" id="fileInput" accept="image/*" capture="user">
     </div>
   </section>
 
-  <!-- ============ 2. 解析中 ============ -->
+  <!-- 2. 解析中 -->
   <section class="screen" id="screen-loading">
+    <div class="card"><div class="loading"><div class="spinner"></div><p id="loadingMsg">お顔を解析しています…</p></div></div>
+  </section>
+
+  <!-- 3. 確定・入力 -->
+  <section class="screen" id="screen-confirm">
     <div class="card">
-      <div class="loading">
-        <div class="spinner"></div>
-        <p id="loadingMsg">お顔を解析しています…</p>
+      <div class="confirm-head">
+        <img id="confirmThumb" alt="">
+        <div>
+          <div class="season" id="confirmSeason">—<small id="confirmSeasonSub"></small></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="flabel">顔型<span class="ai-badge">AI判定</span></div>
+        <div class="fnote">AIの判定を仮選択しています。違う場合はタップで修正してください。</div>
+        <div class="chips" id="faceChips"></div>
+      </div>
+
+      <div class="field">
+        <div class="flabel">髪質</div>
+        <div class="fnote">乾いた状態での太さ・硬さ・毛量・くせを見て、近いものを選んでください。</div>
+        <div class="chips" id="hairChips"></div>
+      </div>
+
+      <div class="btnrow" style="margin-top:24px">
+        <button class="btn-ghost btn-sm" id="backToCapture">撮り直し</button>
+        <button class="btn-primary" id="showResult" disabled>提案を見る</button>
       </div>
     </div>
   </section>
 
-  <!-- ============ 3. 結果画面 ============ -->
+  <!-- 4. 結果 -->
   <section class="screen" id="screen-result">
     <div class="card">
       <div class="result-head">
@@ -172,7 +187,7 @@
         <div>
           <div class="season-name" id="seasonName">—</div>
           <div class="face-name" id="faceName">—</div>
-          <div class="conf" id="confNote"></div>
+          <div class="hair-name" id="hairName">—</div>
         </div>
       </div>
 
@@ -188,13 +203,10 @@
       </div>
 
       <div class="section">
-        <h3>お顔立ちの特徴</h3>
-        <p class="desc" id="faceDesc"></p>
-      </div>
-
-      <div class="section">
         <h3>おすすめヘアスタイル</h3>
-        <div class="style-cards" id="styleCards"></div>
+        <p class="style-name" id="styleName"></p>
+        <p class="style-feat" id="styleFeat"></p>
+        <dl class="spec" id="styleSpec"></dl>
       </div>
 
       <div class="section">
@@ -202,320 +214,315 @@
         <div class="taglist" id="makeupTags"></div>
       </div>
 
-      <p class="disclaimer">
-        ※この診断はAIによる目安です。撮影時の照明や画質の影響を受けるため、最終的なご提案は担当スタイリストが確認いたします。
-      </p>
+      <p class="disclaimer">※この診断はAIによる目安です。撮影時の照明や画質の影響を受けるため、最終的なご提案は担当スタイリストが確認いたします。</p>
+      <p class="srcbadge" id="srcBadge"></p>
 
-      <div class="btnrow" style="margin-top:18px">
-        <button class="btn-ghost btn-sm" id="retakeBtn">もう一度撮影</button>
-      </div>
+      <div class="btnrow" style="margin-top:18px"><button class="btn-ghost btn-sm" id="retakeBtn">もう一度撮影</button></div>
     </div>
   </section>
 </div>
 
 <script type="module">
 /* =====================================================================
-   ★ スタイリスト知見エリア（ここを編集すれば提案内容を調整できます）
+   ★ パーソナルカラー知見（写真から自動診断する色の提案）
+     ※ヘアスタイルの知見はGoogleスプレッドシートで管理します
    ===================================================================== */
-
-const KNOWLEDGE = {
-  seasons: {
-    spring: {
-      name: "イエベ 春 (Spring)",
-      desc: "明るく澄んだ、あたたかみのある色がお似合いです。血色感が出て、若々しく健康的な印象になります。",
-      palette: [["#ffd166","コーラル"],["#ff9f68","アプリコット"],["#a3d977","フレッシュグリーン"],["#7ec8e3","アクアブルー"],["#ffb7b2","ピーチ"]],
-      hair:    [["#8a5a2b","ライトブラウン"],["#c68642","キャラメル"],["#b5651d","オレンジブラウン"],["#d9a066","ゴールドベージュ"]],
-      makeup:  ["コーラルピンク","オレンジ系チーク","ゴールド系アイシャドウ","クリアな明るい色"]
-    },
-    summer: {
-      name: "ブルベ 夏 (Summer)",
-      desc: "やわらかく涼しげな、青みがかったパステルカラーがお似合いです。上品でエレガントな透明感が引き立ちます。",
-      palette: [["#f7cad0","ローズピンク"],["#b8b8ff","ラベンダー"],["#a0c4ff","スカイブルー"],["#cdb4db","モーヴ"],["#bde0fe","パウダーブルー"]],
-      hair:    [["#6f4e37","アッシュブラウン"],["#8b7d6b","グレージュ"],["#5c5470","スモーキーアッシュ"],["#7a6c5d","ミルクティーベージュ"]],
-      makeup:  ["ローズピンク","青みピンクのチーク","ラベンダー系シャドウ","くすみパステル"]
-    },
-    autumn: {
-      name: "イエベ 秋 (Autumn)",
-      desc: "深みのある落ち着いた、こっくりしたアースカラーがお似合いです。大人っぽくリッチな印象になります。",
-      palette: [["#c1440e","テラコッタ"],["#8a6d3b","マスタード"],["#6b8e23","オリーブ"],["#8b4513","ブラウン"],["#b5651d","パンプキン"]],
-      hair:    [["#3b2417","ダークブラウン"],["#6f4e37","チョコレート"],["#8b5a2b","マホガニー"],["#7b3f00","カッパー"]],
-      makeup:  ["テラコッタ","ブラウン系チーク","カーキ・ゴールドシャドウ","マットな深い色"]
-    },
-    winter: {
-      name: "ブルベ 冬 (Winter)",
-      desc: "はっきりとコントラストのある、クールでシャープな色がお似合いです。凛とした華やかな印象になります。",
-      palette: [["#d90429","トゥルーレッド"],["#3a0ca3","ロイヤルブルー"],["#f72585","マゼンタ"],["#000000","ブラック"],["#e0e1dd","アイシーグレー"]],
-      hair:    [["#1a1a1a","ブルーブラック"],["#2c2c2c","ダークアッシュ"],["#4b3621","エスプレッソ"],["#3d3d3d","スモーキーブラック"]],
-      makeup:  ["ビビッドレッド","青みローズ","シルバー系シャドウ","はっきりした濃色"]
-    }
-  },
-
-  faceShapes: {
-    oval: {
-      name:"卵型 (オーバル)",
-      desc:"バランスの取れた理想的なお顔立ちです。ほとんどのスタイルが似合う万能タイプ。",
-      styles:[["似合わせ自由度◎","前髪あり・なしどちらも似合います。トレンドスタイルを楽しめます。"],
-              ["ミディアムレイヤー","顔まわりに動きを出すと、より華やかに。"]]
-    },
-    round: {
-      name:"丸型 (ラウンド)",
-      desc:"やわらかく可愛らしい印象。縦のラインを意識すると、すっきり見えます。",
-      styles:[["ひし形シルエット","トップにボリューム、サイドはタイトに。縦長効果で小顔見え。"],
-              ["長め前髪／かき上げ","おでこを縦に見せて大人っぽく。丸みをカバー。"]]
-    },
-    long: {
-      name:"面長 (ロング)",
-      desc:"大人っぽく上品な印象。横のボリュームで縦の長さをやわらげると好バランス。",
-      styles:[["前髪あり","おでこを隠して縦の長さをカット。若々しい印象に。"],
-              ["サイドにボリューム","耳まわりの丸みで横幅をプラス。ゆるふわパーマも◎。"]]
-    },
-    square: {
-      name:"ベース型 (スクエア)",
-      desc:"エラ張りで意志の強い印象。輪郭をひし形に近づけると柔らかく見えます。",
-      styles:[["フェイスラインを包む","顔まわりにレイヤーやカールでエラをカバー。"],
-              ["トップにボリューム","高さを出して視線を上へ。ひし形シルエットで小顔に。"]]
-    },
-    heart: {
-      name:"逆三角形 (ハート)",
-      desc:"シャープで華やかな印象。あご下にボリュームを出すとバランスUP。",
-      styles:[["毛先にボリューム","あご〜首元にかけて厚みを。ワンカール外ハネも◎。"],
-              ["ふんわり前髪","おでこの広さをカバーしてやわらかく。"]]
-    },
-    diamond: {
-      name:"ひし形 (ダイヤモンド)",
-      desc:"頬骨が高くスタイリッシュな印象。おでことあご周りにボリュームを。",
-      styles:[["前髪＋毛先で幅出し","頬骨の張りをレイヤーでぼかしてバランス調整。"],
-              ["ふんわりバング","縦横のバランスを整えて優しい印象に。"]]
-    }
-  }
+const COLOR_KNOWLEDGE = {
+  spring:{ name:"イエベ 春 (Spring)",
+    desc:"明るく澄んだ、あたたかみのある色がお似合いです。血色感が出て、若々しく健康的な印象になります。",
+    palette:[["#ffd166","コーラル"],["#ff9f68","アプリコット"],["#a3d977","フレッシュグリーン"],["#7ec8e3","アクアブルー"],["#ffb7b2","ピーチ"]],
+    hair:[["#8a5a2b","ライトブラウン"],["#c68642","キャラメル"],["#b5651d","オレンジブラウン"],["#d9a066","ゴールドベージュ"]],
+    makeup:["コーラルピンク","オレンジ系チーク","ゴールド系アイシャドウ","クリアな明るい色"] },
+  summer:{ name:"ブルベ 夏 (Summer)",
+    desc:"やわらかく涼しげな、青みがかったパステルカラーがお似合いです。上品でエレガントな透明感が引き立ちます。",
+    palette:[["#f7cad0","ローズピンク"],["#b8b8ff","ラベンダー"],["#a0c4ff","スカイブルー"],["#cdb4db","モーヴ"],["#bde0fe","パウダーブルー"]],
+    hair:[["#6f4e37","アッシュブラウン"],["#8b7d6b","グレージュ"],["#5c5470","スモーキーアッシュ"],["#7a6c5d","ミルクティーベージュ"]],
+    makeup:["ローズピンク","青みピンクのチーク","ラベンダー系シャドウ","くすみパステル"] },
+  autumn:{ name:"イエベ 秋 (Autumn)",
+    desc:"深みのある落ち着いた、こっくりしたアースカラーがお似合いです。大人っぽくリッチな印象になります。",
+    palette:[["#c1440e","テラコッタ"],["#8a6d3b","マスタード"],["#6b8e23","オリーブ"],["#8b4513","ブラウン"],["#b5651d","パンプキン"]],
+    hair:[["#3b2417","ダークブラウン"],["#6f4e37","チョコレート"],["#8b5a2b","マホガニー"],["#7b3f00","カッパー"]],
+    makeup:["テラコッタ","ブラウン系チーク","カーキ・ゴールドシャドウ","マットな深い色"] },
+  winter:{ name:"ブルベ 冬 (Winter)",
+    desc:"はっきりとコントラストのある、クールでシャープな色がお似合いです。凛とした華やかな印象になります。",
+    palette:[["#d90429","トゥルーレッド"],["#3a0ca3","ロイヤルブルー"],["#f72585","マゼンタ"],["#1a1a1a","ブラック"],["#e0e1dd","アイシーグレー"]],
+    hair:[["#1a1a1a","ブルーブラック"],["#2c2c2c","ダークアッシュ"],["#4b3621","エスプレッソ"],["#3d3d3d","スモーキーブラック"]],
+    makeup:["ビビッドレッド","青みローズ","シルバー系シャドウ","はっきりした濃色"] }
 };
 
+/* 顔型・髪質の選択肢（スプレッドシートの「顔型」「髪質」列の値と一致させること） */
+const FACE_TYPES = ["卵型","丸型","面長","四角","ベース","逆三角","ハート"];
+const HAIR_TYPES = [
+  ["細軟少","細毛・軟毛・少なめ"],
+  ["標準","普通毛・中間"],
+  ["太硬多","太毛・硬毛・多毛"],
+  ["くせ乾ダメ","くせ・乾燥・ダメージ"]
+];
+
 /* =====================================================================
-   画面制御ユーティリティ
+   ★ ヘアスタイル知見（初期データ）
+     ── Googleスプレッドシートを公開・設定すると、こちらは使われず
+        シートの内容が反映されます（シート未設定時のフォールバック）
+   ===================================================================== */
+const FALLBACK_CSV = `顔型,髪質,推奨スタイル名,特徴,長さ,顔まわりデザイン,ボリューム指示,スタイリング提案
+卵型,細軟少,ひし形レイヤーボブ,バランス活かしつつ・細毛でも平坦に見せない,ボブ,目尻幅の前髪・薄めの顔まわりレイヤー,トップに軽い支え・毛先は厚み維持,26〜32mmでワンカール・軽めバーム
+卵型,標準,くびれミディアムレイヤー,最も汎用性が高く・質感提案が活きる,ミディアム,前髪はあり/なし両対応・あご下で動く設計,ハチ上に軽さ・首元にくびれ,38mmワンカール・オイル少量
+卵型,太硬多,コンパクト前下がりショートボブ,重さを残しながら収まりを作りやすい,ショート〜ボブ,長めサイドバング,表面を削らず・内側グラデで締める,ストレートブロー後に毛先だけバーム
+卵型,くせ乾ダメ,フェイスレイヤーロング,長さを活かし・傷みを増幅しにくい,ロング,低めフェイスレイヤー・2way前髪,アウトライン厚め・表面は低レイヤー,32/38mmワンカール・保湿オイル
+丸型,細軟少,トップ支えのひし形ショートボブ,子どもっぽく見えにくい縦長補正,ショート〜ボブ,前髪なし〜流し前髪・頬下に落ちるサイド,トップや奥行きで縦を足し・頬横は膨らませすぎない,根元起こしドライ・毛先バーム
+丸型,標準,くびれミディアムレイヤー,顔周りに縦線を作りやすい,ミディアム,あご下から動くレイヤー・薄め前髪,くびれ位置はあご下・頬横の厚みは控えめ,顔まわりリバース・全体ワンカール
+丸型,太硬多,コンパクト前下がりショートボブ,横広がりを抑えやすい定番,ショート〜ボブ,サイド長め・前下がりライン,インナーで量を逃がし・表面は面を残す,ストレートブロー・軽いオイル
+丸型,くせ乾ダメ,ロングフェイスレイヤー,縦線を作りつつ・ダメージを増やしにくい,ロング,頬を通り過ぎる長さのフェイスレイヤー,トップ高は中程度・頬横の暴れを抑える,32〜38mm大きめカール・顔まわりだけ整える
+面長,細軟少,丸みマッシュショート,横幅を足し・トップ高を抑えやすい,ショート,幅広すぎない前髪・耳横に丸み,頬位置にボリューム・トップは盛りすぎない,ハンドブローで丸み・軽めワックス
+面長,標準,外ハネ鎖骨ボブ,頬〜耳位置に横幅を作りやすい,ボブ〜ミディアム,幅のある前髪・外ハネ対応の顔まわり,頬高さにボリューム・縦長トップは回避,毛先外ハネ・表面だけ内巻き
+面長,太硬多,丸みショートボブ,横の丸みで縦長を和らげる,ショート〜ボブ,顔を包むサイド・透け前髪,ハチを抑え・耳横〜頬横に厚み,ブローで内収め・バーム仕上げ
+面長,くせ乾ダメ,外ハネボブ＋低めレイヤー,うねりを活かしやすく・横幅が作れる,ボブ〜ミディアム,シースルー〜流し前髪,顔まわりは広げすぎず・頬位置で動かす,くせを残して毛先だけ外ハネ調整
+四角,細軟少,ソフトくびれミディ,角をやわらかく見せる揺れを作りやすい,ミディアム,斜め前髪・頬〜あごをかする毛束,直線的な顎ラインにぶつけず・少し下で動かす,顔まわりだけリバース・毛先やわらかく
+四角,標準,ひし形レイヤーボブ,直線を丸みに変換しやすい,ボブ,透け前髪・Cライン顔まわり,エラの真横で厚みを作りすぎない,ふんわり内外MIX・オイル＋バーム
+四角,太硬多,ウルフレイヤー,直線の強さを動きで散らせる,ミディアム,顔まわりレイヤー多め,表面は軽さ・下は厚みを残す,毛先散らし・セミウェット
+四角,くせ乾ダメ,フェイスレイヤーロング,顎の角を隠す安全策,ロング,長め前髪・フェイスレイヤー,エラ周りを包み・トップ高は中程度,大きめカールで揺れを出す
+ベース,細軟少,ソフト外ハネボブ,エラを包みながら軽さを出しやすい,ボブ,斜め前髪・サイドにつながる前髪,横幅は残すがエラ位置の角だけをぼかす,毛先外ハネ・顔まわり内巻き
+ベース,標準,くびれミディアムレイヤー,縦ラインと揺れで輪郭を軟化,ミディアム,シースルー・顔まわりCシェイプ,エラの外側に厚みをためず・少し下に重心,顔まわりだけリバースで抜け感
+ベース,太硬多,顔まわりレイヤーのロング,毛量を逃がしつつ角をぼかす,ロング,長めバング＋フェイスレイヤー,ハチは抑え・エラ下で動かす,ワンカール＋オイル
+ベース,くせ乾ダメ,ローレイヤーミディ＋自然なストレート感,広がりを抑えながらフェイスラインをソフト化,ミディアム,流し前髪・顔まわり包みライン,表面は低め・内側を整える,ブロー中心・必要なら部分ストレート
+逆三角,細軟少,あごライン外ハネボブ,下重心が作りやすい,ボブ,軽い前髪・サイドバング,トップは盛りすぎず・あご周りに厚み,毛先だけ外ハネ・前髪は透け感
+逆三角,標準,くびれミディアムレイヤー,上重心を下に分散,ミディアム,シースルーバング・下向き顔まわり,頬下〜あごにボリューム・トップ控えめ,顔まわりは内〜外MIX
+逆三角,太硬多,ロブ〜ミディアムボブ,量感で下に厚みを持たせやすい,ボブ〜ミディアム,長め前髪・あごラインに厚み,ハチを抑え・下にウェイトを置く,ストレート寄り仕上げ・毛先だけ動き
+逆三角,くせ乾ダメ,フェイスレイヤーロング,シャープなあご線をやわらげやすい,ロング,下方向に流れる顔まわりレイヤー,根元は抑え・毛先側で動きを出す,大きめカール・オイル仕上げ
+ハート,細軟少,シースルーバングの鎖骨ボブ,額を軽く隠しながら下重心を作る,ボブ〜ミディアム,軽め前髪・サイドバング,額の広さを軽減し・肩にかかる位置で厚み,毛先外ハネ＋前髪薄め
+ハート,標準,フェイスレイヤーロング,額の印象を弱め・あごを柔らかく,ロング,カーテン〜シースルー前髪,顔まわりは下向き・トップはフラット気味,顔まわりワンカール・全体はナチュラル
+ハート,太硬多,下重心ロブ,ハチの広がりを抑えつつボトムを強化,ボブ,目元を透かす前髪,表面は抑え・あご横〜肩にウェイト,ブローで収め・毛先だけ質感出し
+ハート,くせ乾ダメ,ローレイヤーロング,くせを活かしつつ輪郭を和らげる,ロング,前髪軽め・顔まわりは長め,ハチは抑え・あご下〜毛先で動かす,くせ活かしのオイル仕上げ`;
+
+/* =====================================================================
+   知見データの読み込み（シート優先 → 失敗時フォールバック）
+   ===================================================================== */
+let MATRIX = [];      // [{顔型,髪質,推奨スタイル名,...}]
+let MATRIX_SOURCE = "内蔵データ";
+
+function parseCSV(text){
+  text = text.replace(/\r\n/g,"\n").replace(/\r/g,"\n").trim();
+  const rows=[]; let row=[],f="",q=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){ if(c=='"'){ if(text[i+1]=='"'){f+='"';i++;} else q=false; } else f+=c; }
+    else{ if(c=='"')q=true; else if(c==','){row.push(f);f="";} else if(c=="\n"){row.push(f);rows.push(row);row=[];f="";} else f+=c; }
+  }
+  row.push(f); rows.push(row);
+  const head=rows.shift().map(s=>s.trim());
+  return rows.filter(r=>r.some(v=>v.trim())).map(r=>{ const o={}; head.forEach((h,i)=>o[h]=(r[i]||"").trim()); return o; });
+}
+
+async function loadMatrix(){
+  const url = (localStorage.getItem("sheetCsvUrl")||"").trim();
+  if(url){
+    try{
+      const res = await fetch(url, {cache:"no-store"});
+      if(!res.ok) throw new Error("HTTP "+res.status);
+      const data = parseCSV(await res.text());
+      if(data.length && data[0]["顔型"]!==undefined && data[0]["髪質"]!==undefined){
+        MATRIX = data; MATRIX_SOURCE = "スプレッドシート（最新）"; return;
+      }
+      throw new Error("列名が想定と異なります");
+    }catch(e){
+      console.warn("シート読込に失敗、内蔵データを使用します:", e.message);
+      MATRIX_SOURCE = "内蔵データ（シート読込失敗）";
+    }
+  }
+  MATRIX = parseCSV(FALLBACK_CSV);
+}
+
+function lookup(face, hair){
+  return MATRIX.find(r=>r["顔型"]===face && r["髪質"]===hair) || null;
+}
+
+/* =====================================================================
+   画面制御
    ===================================================================== */
 const $ = s => document.querySelector(s);
-function show(id){ document.querySelectorAll('.screen').forEach(e=>e.classList.remove('active')); $('#'+id).classList.add('active'); window.scrollTo(0,0); }
+function show(id){ document.querySelectorAll(".screen").forEach(e=>e.classList.remove("active")); $("#"+id).classList.add("active"); window.scrollTo(0,0); }
 
-const video = $('#video');
-const preview = $('#preview');
-const stagePlaceholder = $('#stagePlaceholder');
-let stream = null;
-let liveMode = false;
+const video=$("#video"), preview=$("#preview"), stagePlaceholder=$("#stagePlaceholder");
+let stream=null;
+let sel = { face:null, hair:null, seasonKey:null, dataUrl:null };
 
-/* ---- 設定パネル ---- */
-$('#settingsToggle').addEventListener('click', ()=>{
-  const p = $('#settingsPanel'); p.classList.toggle('hidden');
-  const saved = localStorage.getItem('anthKey'); if(saved) $('#apiKey').value = saved;
+/* 設定パネル */
+$("#settingsToggle").addEventListener("click", ()=>{
+  const p=$("#settingsPanel"); p.classList.toggle("hidden");
+  $("#sheetUrl").value = localStorage.getItem("sheetCsvUrl")||"";
 });
-$('#apiKey').addEventListener('change', e=> localStorage.setItem('anthKey', e.target.value.trim()));
+$("#sheetUrl").addEventListener("change", async e=>{
+  localStorage.setItem("sheetCsvUrl", e.target.value.trim());
+  $("#sheetStatus").textContent = "読み込み中…";
+  await loadMatrix();
+  $("#sheetStatus").innerHTML = "現在の読込元： <b>"+MATRIX_SOURCE+"</b>（"+MATRIX.length+"件）";
+});
 
 /* =====================================================================
-   カメラ起動：ライブプレビュー（getUserMedia）→ 失敗時は純正カメラに切替
+   カメラ
    ===================================================================== */
 async function initCamera(){
   try{
-    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('no gum');
-    stream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user', width:{ideal:1280}, height:{ideal:1600} }, audio:false });
-    video.srcObject = stream; video.classList.remove('hidden');
-    stagePlaceholder.classList.add('hidden');
-    liveMode = true;
+    if(!navigator.mediaDevices?.getUserMedia) throw new Error("no gum");
+    stream = await navigator.mediaDevices.getUserMedia({ video:{facingMode:"user",width:{ideal:1280},height:{ideal:1600}}, audio:false });
+    video.srcObject=stream; video.classList.remove("hidden"); stagePlaceholder.classList.add("hidden");
   }catch(err){
-    // getUserMedia が使えない（file://, 権限拒否, 非対応）→ 純正カメラ入力にフォールバック
-    liveMode = false;
-    video.classList.add('hidden');
-    stagePlaceholder.textContent = '「カメラで撮影する」を押して、お客様のお顔を撮影してください。';
-    stagePlaceholder.classList.remove('hidden');
-    $('#liveControls').classList.add('hidden');
-    $('#fallbackControls').classList.remove('hidden');
-    $('#guide').classList.add('hidden');
+    video.classList.add("hidden");
+    stagePlaceholder.textContent="「カメラで撮影する」を押して、お客様のお顔を撮影してください。";
+    stagePlaceholder.classList.remove("hidden");
+    $("#liveControls").classList.add("hidden"); $("#fallbackControls").classList.remove("hidden");
+    $("#guide").classList.add("hidden");
   }
 }
-
-/* ライブ撮影 */
-$('#shootBtn').addEventListener('click', ()=>{
-  const c = document.createElement('canvas');
-  c.width = video.videoWidth; c.height = video.videoHeight;
-  const ctx = c.getContext('2d');
-  // フロントカメラは鏡像なので反転を戻す
-  ctx.translate(c.width,0); ctx.scale(-1,1);
-  ctx.drawImage(video,0,0,c.width,c.height);
-  const dataUrl = c.toDataURL('image/jpeg',0.92);
-  handleImage(dataUrl);
+$("#shootBtn").addEventListener("click", ()=>{
+  const c=document.createElement("canvas"); c.width=video.videoWidth; c.height=video.videoHeight;
+  const ctx=c.getContext("2d"); ctx.translate(c.width,0); ctx.scale(-1,1); ctx.drawImage(video,0,0,c.width,c.height);
+  handleImage(c.toDataURL("image/jpeg",0.92));
 });
-
-/* 純正カメラ撮影 */
-$('#nativeCamBtn').addEventListener('click', ()=> $('#fileInput').click());
-$('#fileInput').addEventListener('change', e=>{
-  const f = e.target.files[0]; if(!f) return;
-  const r = new FileReader(); r.onload = ()=> handleImage(r.result); r.readAsDataURL(f);
-});
+$("#nativeCamBtn").addEventListener("click", ()=> $("#fileInput").click());
+$("#fileInput").addEventListener("change", e=>{ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>handleImage(r.result); r.readAsDataURL(f); });
 
 /* =====================================================================
-   画像を受け取り → 解析 → 結果表示
+   撮影 → 解析 → 確定画面
    ===================================================================== */
 async function handleImage(dataUrl){
   if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
-  preview.src = dataUrl;
-  $('#resultThumb').src = dataUrl;
-  show('screen-loading');
-
-  const img = new Image();
-  img.onload = async ()=>{
+  sel.dataUrl = dataUrl;
+  preview.src=dataUrl; $("#confirmThumb").src=dataUrl; $("#resultThumb").src=dataUrl;
+  show("screen-loading");
+  const img=new Image();
+  img.onload=async ()=>{
     try{
-      $('#loadingMsg').textContent = 'お顔の輪郭を測定しています…';
-      const face = await analyzeFace(img);       // 顔型 + 肌色サンプリング
-      $('#loadingMsg').textContent = 'パーソナルカラーを判定しています…';
-      const season = await analyzeColor(img, face); // パーソナルカラー
-      renderResult(season, face);
-      show('screen-result');
+      $("#loadingMsg").textContent="お顔の輪郭を測定しています…";
+      const face=await analyzeFace(img);
+      $("#loadingMsg").textContent="パーソナルカラーを判定しています…";
+      const season=await analyzeColor(img, face);
+      sel.face = face.shape; sel.hair = null; sel.seasonKey = season.key;
+      buildConfirm(season);
+      show("screen-confirm");
     }catch(err){
       console.error(err);
-      alert('お顔をうまく認識できませんでした。明るい場所で、正面から撮り直してください。\n\n（詳細: '+ (err.message||err) +'）');
+      alert("お顔をうまく認識できませんでした。明るい場所で、正面から撮り直してください。\n\n（詳細: "+(err.message||err)+"）");
       restart();
     }
   };
-  img.src = dataUrl;
+  img.src=dataUrl;
 }
 
-/* =====================================================================
-   顔解析：MediaPipe FaceLandmarker（478点）
-   ===================================================================== */
-let faceLandmarker = null;
+/* 顔解析：MediaPipe FaceLandmarker */
+let faceLandmarker=null;
 async function getLandmarker(){
   if(faceLandmarker) return faceLandmarker;
-  const vision = await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs');
-  const fileset = await vision.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm');
-  faceLandmarker = await vision.FaceLandmarker.createFromOptions(fileset, {
-    baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task' },
-    runningMode:'IMAGE', numFaces:1
-  });
+  const vision=await import("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs");
+  const fileset=await vision.FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
+  faceLandmarker=await vision.FaceLandmarker.createFromOptions(fileset,{
+    baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"},
+    runningMode:"IMAGE", numFaces:1 });
   return faceLandmarker;
 }
-
-function dist(a,b){ return Math.hypot(a.x-b.x, a.y-b.y); }
+const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 
 async function analyzeFace(img){
-  const lm = await getLandmarker();
-  const res = lm.detect(img);
-  if(!res.faceLandmarks || !res.faceLandmarks.length) throw new Error('顔を検出できませんでした');
-  const p = res.faceLandmarks[0];  // 正規化座標(0-1)
-
-  // 主要幅・長さ（MediaPipe FaceMesh index）
-  const cheekW   = dist(p[234], p[454]);   // 頬骨の最大幅
-  const jawW     = dist(p[172], p[397]);   // エラ幅
-  const foreheadW= dist(p[54],  p[284]);   // こめかみ幅
-  const faceL    = dist(p[10],  p[152]);   // おでこ中央〜あご先
-
-  const lwr = faceL / cheekW;              // 縦横比
-  const jc  = jawW / cheekW;               // エラ/頬骨
-  const fc  = foreheadW / cheekW;          // こめかみ/頬骨
-
-  // ---- 顔型分類（ヒューリスティック） ----
+  const lm=await getLandmarker();
+  const res=lm.detect(img);
+  if(!res.faceLandmarks?.length) throw new Error("顔を検出できませんでした");
+  const p=res.faceLandmarks[0];
+  const cheekW=dist(p[234],p[454]), jawW=dist(p[172],p[397]), foreheadW=dist(p[54],p[284]), faceL=dist(p[10],p[152]);
+  const lwr=faceL/cheekW, jc=jawW/cheekW, fc=foreheadW/cheekW;
   let shape;
-  if(lwr >= 1.5){
-    shape = 'long';
-  }else if(fc > 1.03 && jc < 0.92){
-    shape = 'heart';                       // おでこ広く・あご細い
-  }else if(jc > 1.0 && lwr < 1.4){
-    shape = 'square';                      // エラ張り
-  }else if(cheekW > foreheadW*1.05 && cheekW > jawW*1.05 && lwr < 1.5){
-    shape = 'diamond';                     // 頬骨が最も広い
-  }else if(lwr < 1.25 && Math.abs(jc-1)<0.12 && Math.abs(fc-1)<0.12){
-    shape = 'round';                       // 丸くバランス良い・短め
-  }else{
-    shape = 'oval';                        // それ以外は卵型（理想）
-  }
-
+  if(lwr>=1.5) shape="面長";
+  else if(fc>=1.02 && jc<=0.92) shape="逆三角";
+  else if(jc>=1.0 && lwr<=1.45) shape="ベース";
+  else if(jc>=0.95 && fc>=0.95 && lwr<=1.28) shape="四角";
+  else if(lwr<=1.25) shape="丸型";
+  else shape="卵型";
   return { landmarks:p, shape, metrics:{lwr,jc,fc} };
 }
 
-/* =====================================================================
-   パーソナルカラー：肌サンプリング → 4シーズン分類
-   （簡易診断モード。APIキーがあれば将来ここをAI判定に差し替え可能）
-   ===================================================================== */
+/* パーソナルカラー：肌サンプリング → 4シーズン */
 async function analyzeColor(img, face){
-  // 頬・おでこの肌ピクセルを平均化
-  const c = document.createElement('canvas');
-  c.width = img.naturalWidth; c.height = img.naturalHeight;
-  const ctx = c.getContext('2d'); ctx.drawImage(img,0,0);
-  const p = face.landmarks;
-  const samplePts = [p[50],p[280],p[108],p[337],p[234],p[454]]; // 両頬・おでこ両側・頬骨
+  const c=document.createElement("canvas"); c.width=img.naturalWidth; c.height=img.naturalHeight;
+  const ctx=c.getContext("2d"); ctx.drawImage(img,0,0);
+  const p=face.landmarks, pts=[p[50],p[280],p[108],p[337],p[234],p[454]];
   let R=0,G=0,B=0,n=0;
-  for(const pt of samplePts){
-    const x = Math.round(pt.x*c.width), y = Math.round(pt.y*c.height);
-    const rad = Math.round(c.width*0.02);
-    try{
-      const d = ctx.getImageData(x-rad,y-rad,rad*2,rad*2).data;
-      for(let i=0;i<d.length;i+=4){ R+=d[i]; G+=d[i+1]; B+=d[i+2]; n++; }
-    }catch(e){/* 範囲外はスキップ */}
+  for(const pt of pts){
+    const x=Math.round(pt.x*c.width), y=Math.round(pt.y*c.height), rad=Math.round(c.width*0.02);
+    try{ const d=ctx.getImageData(x-rad,y-rad,rad*2,rad*2).data; for(let i=0;i<d.length;i+=4){R+=d[i];G+=d[i+1];B+=d[i+2];n++;} }catch(e){}
   }
-  if(!n) throw new Error('肌の色を取得できませんでした');
-  R/=n; G/=n; B/=n;
-
-  // HSV変換
-  const {h,s,v} = rgb2hsv(R,G,B);
-
-  // ---- 判定 ----
-  // 1) アンダートーン（暖/寒）: 黄み(R>B・色相が黄〜橙)なら暖色＝イエベ
-  const warm = (R - B) > 6 || (h >= 20 && h <= 60);
-  // 2) 明度/彩度（明るく高彩度＝クリア / 暗く低彩度＝ディープ・ミュート）
-  const bright = v > 200 || s > 0.35;
-
-  let key;
-  if(warm && bright)      key='spring';
-  else if(warm && !bright)key='autumn';
-  else if(!warm && bright)key='winter';
-  else                    key='summer';
-
-  return { key, skin:{R:Math.round(R),G:Math.round(G),B:Math.round(B)}, hsv:{h:Math.round(h),s:+s.toFixed(2),v:Math.round(v)} };
+  if(!n) throw new Error("肌の色を取得できませんでした");
+  R/=n;G/=n;B/=n;
+  const {h,s,v}=rgb2hsv(R,G,B);
+  const warm=(R-B)>6 || (h>=20&&h<=60);
+  const bright=v>200 || s>0.35;
+  let key = warm ? (bright?"spring":"autumn") : (bright?"winter":"summer");
+  return { key, skin:{R:Math.round(R),G:Math.round(G),B:Math.round(B)} };
 }
-
 function rgb2hsv(r,g,b){
-  r/=255; g/=255; b/=255;
-  const mx=Math.max(r,g,b), mn=Math.min(r,g,b), d=mx-mn;
-  let h=0;
-  if(d){
-    if(mx===r) h=60*(((g-b)/d)%6);
-    else if(mx===g) h=60*((b-r)/d+2);
-    else h=60*((r-g)/d+4);
-  }
-  if(h<0)h+=360;
-  const s = mx===0?0:d/mx;
-  return {h, s, v:mx*255};
+  r/=255;g/=255;b/=255; const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn; let h=0;
+  if(d){ if(mx===r)h=60*(((g-b)/d)%6); else if(mx===g)h=60*((b-r)/d+2); else h=60*((r-g)/d+4); }
+  if(h<0)h+=360; return {h,s:mx===0?0:d/mx,v:mx*255};
 }
+
+/* =====================================================================
+   確定画面の構築
+   ===================================================================== */
+function buildConfirm(season){
+  const S=COLOR_KNOWLEDGE[season.key];
+  $("#confirmSeason").firstChild.textContent = S.name;
+  $("#confirmSeasonSub").textContent = "パーソナルカラー（写真から自動判定）";
+
+  const fc=$("#faceChips"); fc.innerHTML="";
+  FACE_TYPES.forEach(t=>{
+    const b=document.createElement("button"); b.className="chip-btn"+(t===sel.face?" sel":""); b.textContent=t;
+    b.addEventListener("click", ()=>{ sel.face=t; [...fc.children].forEach(x=>x.classList.remove("sel")); b.classList.add("sel"); updateResultBtn(); });
+    fc.appendChild(b);
+  });
+  const hc=$("#hairChips"); hc.innerHTML="";
+  HAIR_TYPES.forEach(([t,sub])=>{
+    const b=document.createElement("button"); b.className="chip-btn"; b.innerHTML=t+'<span class="sub">'+sub+"</span>";
+    b.addEventListener("click", ()=>{ sel.hair=t; [...hc.children].forEach(x=>x.classList.remove("sel")); b.classList.add("sel"); updateResultBtn(); });
+    hc.appendChild(b);
+  });
+  updateResultBtn();
+}
+function updateResultBtn(){ $("#showResult").disabled = !(sel.face && sel.hair); }
 
 /* =====================================================================
    結果描画
    ===================================================================== */
-function swatchHTML(list){
-  return list.map(([hex,label])=>`<div class="swatch"><div class="chip" style="background:${hex}"></div><span>${label}</span></div>`).join('');
+const swatchHTML = list => list.map(([hex,label])=>`<div class="swatch"><div class="chip" style="background:${hex}"></div><span>${label}</span></div>`).join("");
+
+function renderResult(){
+  const S=COLOR_KNOWLEDGE[sel.seasonKey];
+  $("#seasonName").textContent=S.name;
+  $("#faceName").textContent="顔型："+sel.face;
+  $("#hairName").textContent="髪質："+sel.hair;
+  $("#seasonDesc").textContent=S.desc;
+  $("#paletteSwatches").innerHTML=swatchHTML(S.palette);
+  $("#hairSwatches").innerHTML=swatchHTML(S.hair);
+  $("#makeupTags").innerHTML=S.makeup.map(m=>`<span class="tag">${m}</span>`).join("");
+
+  const row=lookup(sel.face, sel.hair);
+  if(row){
+    $("#styleName").textContent=row["推奨スタイル名"]||"—";
+    $("#styleFeat").textContent=row["特徴"]||"";
+    const specs=[["長さ",row["長さ"]],["顔まわりデザイン",row["顔まわりデザイン"]],["ボリューム",row["ボリューム指示"]],["スタイリング",row["スタイリング提案"]]];
+    $("#styleSpec").innerHTML=specs.filter(([,v])=>v).map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("");
+  }else{
+    $("#styleName").textContent="該当データがありません";
+    $("#styleFeat").textContent="この顔型×髪質の組み合わせがシートに見つかりませんでした。";
+    $("#styleSpec").innerHTML="";
+  }
+  $("#srcBadge").innerHTML="スタイル提案の読込元： <b>"+MATRIX_SOURCE+"</b>";
 }
 
-function renderResult(seasonRes, faceRes){
-  const S = KNOWLEDGE.seasons[seasonRes.key];
-  const F = KNOWLEDGE.faceShapes[faceRes.shape];
-
-  $('#seasonName').textContent = S.name;
-  $('#faceName').textContent = F.name;
-  $('#confNote').textContent = `簡易診断モード（肌基準色 RGB ${seasonRes.skin.R},${seasonRes.skin.G},${seasonRes.skin.B}）`;
-
-  $('#seasonDesc').textContent = S.desc;
-  $('#paletteSwatches').innerHTML = swatchHTML(S.palette);
-  $('#hairSwatches').innerHTML = swatchHTML(S.hair);
-
-  $('#faceDesc').textContent = F.desc;
-  $('#styleCards').innerHTML = F.styles.map(([t,d])=>`<div class="style-card"><h4>${t}</h4><p>${d}</p></div>`).join('');
-
-  $('#makeupTags').innerHTML = S.makeup.map(m=>`<span class="tag">${m}</span>`).join('');
-}
-
-/* =====================================================================
-   リセット / 再撮影
-   ===================================================================== */
-function restart(){ show('screen-capture'); initCamera(); }
-$('#retakeBtn').addEventListener('click', restart);
+$("#showResult").addEventListener("click", ()=>{ renderResult(); show("screen-result"); });
+$("#backToCapture").addEventListener("click", restart);
+$("#retakeBtn").addEventListener("click", restart);
+function restart(){ sel={face:null,hair:null,seasonKey:null,dataUrl:null}; show("screen-capture"); initCamera(); }
 
 /* 起動 */
+await loadMatrix();
 initCamera();
 </script>
 </body>
