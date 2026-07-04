@@ -106,10 +106,18 @@
   .srcbadge{font-size:11px; color:var(--sub); margin-top:14px; text-align:right}
   .srcbadge b{color:var(--accent-d)}
 
-  .settings-toggle{margin-left:auto; background:none; color:var(--sub); font-size:12px; font-weight:500; padding:6px}
-  .settings{margin-top:14px; font-size:12.5px; color:var(--sub); line-height:1.7}
-  .settings input{width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px; font-size:12.5px; margin-top:6px; font-family:inherit}
-  .settings label{font-weight:600; color:var(--ink)}
+  .settings-toggle{margin-left:auto; background:#f1ebe5; color:var(--ink); font-size:13px; font-weight:600; padding:8px 16px; border-radius:10px}
+
+  .modal-backdrop{position:fixed; inset:0; background:rgba(40,30,22,.5); display:flex; align-items:center; justify-content:center;
+    padding:20px; z-index:100; animation:fade .2s ease}
+  .modal{background:var(--card); border-radius:18px; box-shadow:0 20px 60px rgba(0,0,0,.25); padding:22px; width:100%; max-width:440px; max-height:86vh; overflow:auto}
+  .modal-head{display:flex; align-items:center; margin-bottom:14px}
+  .modal-head b{font-size:17px}
+  .modal-close{margin-left:auto; background:#f1ebe5; color:var(--ink); font-size:15px; line-height:1; padding:8px 11px; border-radius:9px}
+  .modal .mlabel{display:block; font-weight:600; color:var(--ink); font-size:13.5px}
+  .modal .mnote{font-size:12px; color:var(--sub); line-height:1.7; margin:6px 0 10px}
+  .modal input{width:100%; padding:12px; border:1px solid var(--line); border-radius:10px; font-size:12.5px; font-family:inherit}
+  .modal .mstatus{font-size:12px; color:var(--sub); margin-top:10px; min-height:1em}
 </style>
 </head>
 <body>
@@ -135,12 +143,6 @@
       <div class="btnrow" id="liveControls"><button class="btn-primary" id="shootBtn">撮影する</button></div>
       <div class="btnrow hidden" id="fallbackControls"><button class="btn-primary" id="nativeCamBtn">カメラで撮影する</button></div>
 
-      <div class="settings hidden" id="settingsPanel">
-        <label>知見スプレッドシートのURL（ウェブに公開したCSV）</label>
-        <p>Googleスプレッドシートを「ファイル → 共有 → ウェブに公開 → CSV」で公開し、そのURLをここに貼ると、シートの内容が提案に反映されます。空欄の場合はアプリ内蔵の初期データで動作します。</p>
-        <input type="url" id="sheetUrl" placeholder="https://docs.google.com/spreadsheets/d/e/..../pub?output=csv">
-        <p id="sheetStatus" style="margin-top:8px"></p>
-      </div>
       <input type="file" id="fileInput" accept="image/*" capture="user">
     </div>
   </section>
@@ -220,6 +222,18 @@
       <div class="btnrow" style="margin-top:18px"><button class="btn-ghost btn-sm" id="retakeBtn">もう一度撮影</button></div>
     </div>
   </section>
+
+  <!-- 設定モーダル（どの画面からでも開ける） -->
+  <div class="modal-backdrop hidden" id="settingsModal">
+    <div class="modal">
+      <div class="modal-head"><b>設定</b><button class="modal-close" id="settingsClose" aria-label="閉じる">✕</button></div>
+      <label class="mlabel">知見スプレッドシートのURL（ウェブに公開したCSV）</label>
+      <p class="mnote">Googleスプレッドシートを「ファイル → 共有 → ウェブに公開 → CSV」で公開し、そのURLをここに貼ると、シートの内容が提案に反映されます。空欄の場合はアプリ内蔵の初期データで動作します。</p>
+      <input type="url" id="sheetUrl" placeholder="https://docs.google.com/spreadsheets/d/e/..../pub?output=csv">
+      <p id="sheetStatus" class="mstatus"></p>
+      <button class="btn-primary" id="settingsDone" style="width:100%;margin-top:16px">閉じる</button>
+    </div>
+  </div>
 </div>
 
 <script type="module">
@@ -346,11 +360,17 @@ const video=$("#video"), preview=$("#preview"), stagePlaceholder=$("#stagePlaceh
 let stream=null;
 let sel = { face:null, hair:null, seasonKey:null, dataUrl:null };
 
-/* 設定パネル */
-$("#settingsToggle").addEventListener("click", ()=>{
-  const p=$("#settingsPanel"); p.classList.toggle("hidden");
+/* 設定モーダル（どの画面からでも開ける） */
+function openSettings(){
   $("#sheetUrl").value = localStorage.getItem("sheetCsvUrl")||"";
-});
+  $("#sheetStatus").innerHTML = "現在の読込元： <b>"+MATRIX_SOURCE+"</b>（"+MATRIX.length+"件）";
+  $("#settingsModal").classList.remove("hidden");
+}
+function closeSettings(){ $("#settingsModal").classList.add("hidden"); }
+$("#settingsToggle").addEventListener("click", openSettings);
+$("#settingsClose").addEventListener("click", closeSettings);
+$("#settingsDone").addEventListener("click", closeSettings);
+$("#settingsModal").addEventListener("click", e=>{ if(e.target===$("#settingsModal")) closeSettings(); });
 $("#sheetUrl").addEventListener("change", async e=>{
   localStorage.setItem("sheetCsvUrl", e.target.value.trim());
   $("#sheetStatus").textContent = "読み込み中…";
