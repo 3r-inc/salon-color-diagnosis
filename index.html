@@ -253,6 +253,15 @@
   <div class="modal-backdrop hidden" id="settingsModal">
     <div class="modal">
       <div class="modal-head"><b>設定</b><button class="modal-close" id="settingsClose" aria-label="閉じる">✕</button></div>
+
+      <div id="settingsLock">
+        <p class="mnote">設定は管理者用です。パスコードを入力してください。</p>
+        <input type="password" id="adminPass" placeholder="パスコード" autocomplete="off" autocapitalize="off">
+        <p id="adminError" class="mstatus" style="color:#c0392b"></p>
+        <button class="btn-primary" id="adminUnlock" style="width:100%;margin-top:12px">解除</button>
+      </div>
+
+      <div id="settingsBody" class="hidden">
       <label class="mlabel">知見スプレッドシートのURL（ウェブに公開したCSV）</label>
       <p class="mnote">Googleスプレッドシートを「ファイル → 共有 → ウェブに公開 → CSV」で公開し、そのURLをここに貼ると、シートの内容が提案に反映されます。空欄の場合はアプリ内蔵の初期データで動作します。</p>
       <input type="url" id="sheetUrl" placeholder="https://docs.google.com/spreadsheets/d/e/..../pub?output=csv">
@@ -273,6 +282,7 @@
 
       <p id="sheetStatus" class="mstatus"></p>
       <button class="btn-primary" id="settingsDone" style="width:100%;margin-top:16px">閉じる</button>
+      </div>
     </div>
   </div>
 </div>
@@ -471,20 +481,47 @@ let sel = { gender:"レディース", face:null, hair:null, seasonKey:null, data
 function statusHTML(){
   return "スタイル： <b>"+MATRIX_SOURCE+"</b>（"+MATRIX.length+"件）<br>カラー： <b>"+COLOR_SOURCE+"</b>（"+COLOR_DB.length+"件）";
 }
-function openSettings(){
+/* 管理者パスコード（コードにはSHA-256ハッシュのみ／平文は残さない） */
+const ADMIN_HASH="ff1c3b9bbf50448c0c0737cdcddfb8e3783e062be9d36b2624cf695a8b936f6d";
+async function sha256hex(s){
+  const buf=await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+function populateSettings(){
   $("#sheetUrl").value = localStorage.getItem("sheetCsvUrl")||"";
   $("#colorSheetUrl").value = localStorage.getItem("colorSheetCsvUrl")||"";
   $("#aiMode").checked = localStorage.getItem("aiMode")==="1";
   $("#anthKey").value = localStorage.getItem("anthKey")||"";
   $("#aiModel").value = localStorage.getItem("aiModel")||"claude-haiku-4-5-20251001";
   $("#sheetStatus").innerHTML = statusHTML();
+}
+function openSettings(){
+  // 毎回ロック状態から開始（設定内容はパスコード解除後に表示）
+  $("#settingsBody").classList.add("hidden");
+  $("#settingsLock").classList.remove("hidden");
+  $("#adminPass").value=""; $("#adminError").textContent="";
   $("#settingsModal").classList.remove("hidden");
+  setTimeout(()=>$("#adminPass").focus(), 50);
 }
 function closeSettings(){ $("#settingsModal").classList.add("hidden"); }
+async function tryUnlock(){
+  const h=await sha256hex($("#adminPass").value);
+  if(h===ADMIN_HASH){
+    $("#adminError").textContent="";
+    $("#settingsLock").classList.add("hidden");
+    populateSettings();
+    $("#settingsBody").classList.remove("hidden");
+  }else{
+    $("#adminError").textContent="パスコードが違います。";
+    $("#adminPass").value="";
+  }
+}
 $("#settingsToggle").addEventListener("click", openSettings);
 $("#settingsClose").addEventListener("click", closeSettings);
 $("#settingsDone").addEventListener("click", closeSettings);
 $("#settingsModal").addEventListener("click", e=>{ if(e.target===$("#settingsModal")) closeSettings(); });
+$("#adminUnlock").addEventListener("click", tryUnlock);
+$("#adminPass").addEventListener("keydown", e=>{ if(e.key==="Enter") tryUnlock(); });
 $("#sheetUrl").addEventListener("change", async e=>{
   localStorage.setItem("sheetCsvUrl", e.target.value.trim());
   $("#sheetStatus").textContent = "読み込み中…";
