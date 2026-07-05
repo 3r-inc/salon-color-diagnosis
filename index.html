@@ -165,13 +165,19 @@
       <div class="confirm-head">
         <img id="confirmThumb" alt="">
         <div>
-          <div class="season" id="confirmSeason">—<small id="confirmSeasonSub"></small></div>
+          <div class="season" id="confirmSeason">診断結果を確認してください<small id="confirmSeasonSub">AIの判定は「仮」です。違う場合はタップで修正してください。</small></div>
         </div>
       </div>
 
       <div class="field">
         <div class="flabel">性別</div>
         <div class="chips" id="genderChips"></div>
+      </div>
+
+      <div class="field">
+        <div class="flabel">パーソナルカラー<span class="ai-badge">AI判定</span></div>
+        <div class="fnote">写真からの自動判定です。照明の影響を受けるため、目視で違う場合はタップで修正してください。</div>
+        <div class="chips" id="seasonChips"></div>
       </div>
 
       <div class="field">
@@ -285,6 +291,7 @@ const COLOR_KNOWLEDGE = {
 
 /* シーズンキー→カラーシートの「シーズン」列の表記 */
 const SEASON_JP = { spring:"イエベ春", summer:"ブルベ夏", autumn:"イエベ秋", winter:"ブルベ冬" };
+const SEASON_TYPES = [["spring","イエベ春"],["summer","ブルベ夏"],["autumn","イエベ秋"],["winter","ブルベ冬"]];
 
 /* 選択肢（スプレッドシートの「性別」「顔型」「髪質」列の値と一致させること） */
 const GENDER_TYPES = ["レディース","メンズ"];
@@ -565,11 +572,20 @@ async function analyzeColor(img, face){
   }
   if(!n) throw new Error("肌の色を取得できませんでした");
   R/=n;G/=n;B/=n;
-  const {h,s,v}=rgb2hsv(R,G,B);
-  const warm=(R-B)>6 || (h>=20&&h<=60);
-  const bright=v>200 || s>0.35;
-  let key = warm ? (bright?"spring":"autumn") : (bright?"winter":"summer");
-  return { key, skin:{R:Math.round(R),G:Math.round(G),B:Math.round(B)} };
+
+  // --- 暖寒（アンダートーン）: 黄み優勢か赤み優勢か ---
+  // 肌は誰でもR>Bなので単純比較では常に暖色になる。黄み成分(G-B)と赤み成分(R-G)の
+  // 差(=2G-R-B)を見る。赤み(ピンク)が強いほど値が小さく、黄みが強いほど0付近。
+  // ★WARM_TH / LIGHT_TH は撮影環境に合わせて調整する要チューニング項目。
+  const WARM_TH = -12, LIGHT_TH = 175;
+  const warmScore = (G - B) - (R - G);          // = 2G - R - B
+  const warm = warmScore > WARM_TH;
+  // --- 明暗（明度）: 肌の明るさ（照明依存のため目安） ---
+  const Y = 0.299*R + 0.587*G + 0.114*B;
+  const light = Y > LIGHT_TH;
+
+  let key = warm ? (light?"spring":"autumn") : (light?"summer":"winter");
+  return { key, skin:{R:Math.round(R),G:Math.round(G),B:Math.round(B)}, warmScore:Math.round(warmScore), Y:Math.round(Y) };
 }
 function rgb2hsv(r,g,b){
   r/=255;g/=255;b/=255; const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn; let h=0;
@@ -581,9 +597,12 @@ function rgb2hsv(r,g,b){
    確定画面の構築
    ===================================================================== */
 function buildConfirm(season){
-  const S=COLOR_KNOWLEDGE[season.key];
-  $("#confirmSeason").firstChild.textContent = S.name;
-  $("#confirmSeasonSub").textContent = "パーソナルカラー（写真から自動判定）";
+  const sc=$("#seasonChips"); sc.innerHTML="";
+  SEASON_TYPES.forEach(([key,label])=>{
+    const b=document.createElement("button"); b.className="chip-btn"+(key===sel.seasonKey?" sel":""); b.textContent=label;
+    b.addEventListener("click", ()=>{ sel.seasonKey=key; [...sc.children].forEach(x=>x.classList.remove("sel")); b.classList.add("sel"); });
+    sc.appendChild(b);
+  });
 
   const gc=$("#genderChips"); gc.innerHTML="";
   GENDER_TYPES.forEach(t=>{
