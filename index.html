@@ -125,6 +125,10 @@
   .modal .mnote{font-size:12px; color:var(--sub); line-height:1.7; margin:6px 0 10px}
   .modal input{width:100%; padding:12px; border:1px solid var(--line); border-radius:10px; font-size:12.5px; font-family:inherit}
   .modal .mstatus{font-size:12px; color:var(--sub); margin-top:10px; min-height:1em}
+  .modal select{width:100%; padding:11px 12px; border:1px solid var(--line); border-radius:10px; font-size:12.5px; font-family:inherit; margin-top:8px; background:#fff}
+  .ai-box{margin-top:18px; padding:14px; border:1px solid var(--line); border-radius:12px; background:#faf7f4}
+  .toggle-row{display:flex; align-items:center; justify-content:space-between; gap:12px}
+  .toggle-row input{width:20px; height:20px; flex:0 0 auto}
 </style>
 </head>
 <body>
@@ -176,7 +180,7 @@
 
       <div class="field">
         <div class="flabel">パーソナルカラー<span class="ai-badge">AI判定</span></div>
-        <div class="fnote">写真からの自動判定です。照明の影響を受けるため、目視で違う場合はタップで修正してください。</div>
+        <div class="fnote" id="seasonNote">写真からの自動判定です。照明の影響を受けるため、目視で違う場合はタップで修正してください。</div>
         <div class="chips" id="seasonChips"></div>
       </div>
 
@@ -255,6 +259,18 @@
       <label class="mlabel" style="margin-top:16px">ヘアカラーシートのURL（ウェブに公開したCSV）</label>
       <p class="mnote">パーソナルカラー別のおすすめヘアカラー表（「ヘアカラー提案_知見DB」）。未設定の場合は内蔵データで動作します。</p>
       <input type="url" id="colorSheetUrl" placeholder="https://docs.google.com/spreadsheets/d/e/..../pub?output=csv">
+
+      <div class="ai-box">
+        <label class="toggle-row"><span class="mlabel">パーソナルカラーをAI判定（Claude）</span>
+          <input type="checkbox" id="aiMode"></label>
+        <p class="mnote">オンにすると、撮影時にClaudeが肌色を判定します（オフや失敗時は簡易判定で動作）。ご自身のAnthropic APIキーが必要で、1回あたり数円程度の従量課金が発生します。<b>キーはこの端末内にのみ保存</b>されます（公開ページには含まれません）。使いすぎ防止に、Anthropicの管理画面で月額上限の設定を推奨します。</p>
+        <input type="password" id="anthKey" placeholder="APIキー sk-ant-...">
+        <select id="aiModel">
+          <option value="claude-haiku-4-5-20251001">低コスト優先（Haiku）</option>
+          <option value="claude-sonnet-4-6">精度優先（Sonnet）</option>
+        </select>
+      </div>
+
       <p id="sheetStatus" class="mstatus"></p>
       <button class="btn-primary" id="settingsDone" style="width:100%;margin-top:16px">閉じる</button>
     </div>
@@ -458,6 +474,9 @@ function statusHTML(){
 function openSettings(){
   $("#sheetUrl").value = localStorage.getItem("sheetCsvUrl")||"";
   $("#colorSheetUrl").value = localStorage.getItem("colorSheetCsvUrl")||"";
+  $("#aiMode").checked = localStorage.getItem("aiMode")==="1";
+  $("#anthKey").value = localStorage.getItem("anthKey")||"";
+  $("#aiModel").value = localStorage.getItem("aiModel")||"claude-haiku-4-5-20251001";
   $("#sheetStatus").innerHTML = statusHTML();
   $("#settingsModal").classList.remove("hidden");
 }
@@ -478,6 +497,9 @@ $("#colorSheetUrl").addEventListener("change", async e=>{
   await loadColorDB();
   $("#sheetStatus").innerHTML = statusHTML();
 });
+$("#aiMode").addEventListener("change", e=> localStorage.setItem("aiMode", e.target.checked?"1":"0"));
+$("#anthKey").addEventListener("change", e=> localStorage.setItem("anthKey", e.target.value.trim()));
+$("#aiModel").addEventListener("change", e=> localStorage.setItem("aiModel", e.target.value));
 
 /* =====================================================================
    カメラ
@@ -516,8 +538,16 @@ async function handleImage(dataUrl){
     try{
       $("#loadingMsg").textContent="お顔の輪郭を測定しています…";
       const face=await analyzeFace(img);
-      $("#loadingMsg").textContent="パーソナルカラーを判定しています…";
-      const season=await analyzeColor(img, face);
+      const aiOn = localStorage.getItem("aiMode")==="1" && (localStorage.getItem("anthKey")||"").trim();
+      let season;
+      if(aiOn){
+        $("#loadingMsg").textContent="AIがパーソナルカラーを判定しています…";
+        try{ season = await analyzeColorAI(img); }
+        catch(e){ console.warn("AI判定に失敗、簡易判定に切替:", e.message); season = await analyzeColor(img, face); season.source="簡易（AI失敗）"; }
+      }else{
+        $("#loadingMsg").textContent="パーソナルカラーを判定しています…";
+        season = await analyzeColor(img, face); season.source="簡易";
+      }
       sel.face = face.shape; sel.hair = null; sel.seasonKey = season.key;
       buildConfirm(season);
       show("screen-confirm");
@@ -593,10 +623,45 @@ function rgb2hsv(r,g,b){
   if(h<0)h+=360; return {h,s:mx===0?0:d/mx,v:mx*255};
 }
 
+/* パーソナルカラー：Claude（画像認識AI）による判定。失敗時は呼び出し側で簡易判定にフォールバック */
+async function analyzeColorAI(img){
+  const apiKey=(localStorage.getItem("anthKey")||"").trim();
+  if(!apiKey) throw new Error("APIキー未設定");
+  const model=localStorage.getItem("aiModel")||"claude-haiku-4-5-20251001";
+  // 画像を縮小してbase64化（トークン・コスト削減）
+  const maxSide=512, scale=Math.min(1, maxSide/Math.max(img.naturalWidth,img.naturalHeight));
+  const c=document.createElement("canvas");
+  c.width=Math.round(img.naturalWidth*scale); c.height=Math.round(img.naturalHeight*scale);
+  c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+  const b64=c.toDataURL("image/jpeg",0.85).split(",")[1];
+  const prompt='あなたはプロのパーソナルカラーアナリストです。この顔写真から、肌のアンダートーン（黄み/青み）・明度・清濁を見て4シーズンを判定してください。写真の照明で色が偏っている可能性を考慮し、肌そのものの傾向を推定します。JSONのみ返答（前後の文章禁止）: {"season":"spring|summer|autumn|winter","confidence":"high|medium|low","reason":"25字以内の日本語根拠"}。spring=イエベ春, summer=ブルベ夏, autumn=イエベ秋, winter=ブルベ冬。';
+  const res=await fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",
+    headers:{ "x-api-key":apiKey, "anthropic-version":"2023-06-01", "anthropic-dangerous-direct-browser-access":"true", "content-type":"application/json" },
+    body:JSON.stringify({ model, max_tokens:200, messages:[{role:"user",content:[
+      {type:"image",source:{type:"base64",media_type:"image/jpeg",data:b64}},
+      {type:"text",text:prompt}
+    ]}]})
+  });
+  if(!res.ok){ const t=await res.text(); throw new Error("API "+res.status+": "+t.slice(0,140)); }
+  const data=await res.json();
+  const txt=(data.content?.[0]?.text||"").trim();
+  const m=txt.match(/\{[\s\S]*\}/); if(!m) throw new Error("JSON解析失敗: "+txt.slice(0,80));
+  const obj=JSON.parse(m[0]);
+  if(!["spring","summer","autumn","winter"].includes(obj.season)) throw new Error("season不正: "+obj.season);
+  return { key:obj.season, source:"AI", confidence:obj.confidence||"", reason:obj.reason||"" };
+}
+
 /* =====================================================================
    確定画面の構築
    ===================================================================== */
 function buildConfirm(season){
+  const src = season && season.source ? season.source : "簡易";
+  if(src==="AI"){
+    $("#seasonNote").textContent = "Claude判定"+(season.confidence?"（確度:"+season.confidence+"）":"")+(season.reason?"："+season.reason:"")+"。違う場合はタップで修正してください。";
+  }else{
+    $("#seasonNote").textContent = (src.indexOf("AI失敗")>=0 ? "AI判定に失敗したため簡易判定を表示しています。" : "写真からの簡易自動判定です。照明の影響を受けます。")+"違う場合はタップで修正してください。";
+  }
   const sc=$("#seasonChips"); sc.innerHTML="";
   SEASON_TYPES.forEach(([key,label])=>{
     const b=document.createElement("button"); b.className="chip-btn"+(key===sel.seasonKey?" sel":""); b.textContent=label;
